@@ -10,54 +10,37 @@ var personal = new Personal('ws://localhost:8546');
 var net = require('net');
 
 
-exports.create = function(req, res) {
+exports.create = async function (req, res) {
     // Create and Save a new Wallet
-    var req_userId = req.session.user._id;
-    console.log("user id " +req_userId);
+     var req_userId = req.session.user._id;
+     console.log("user id " +req_userId);
 
     var password = req.session.user.pass;
-    console.log("req_password" +password);
-    var req_public='';
-   // var acc = web3.eth.accounts.create("password");
-   //  if(!web3.isConnected())
-   //      console.log("not connected");
-   //  else
-   //      console.log("connected");
-    web3.eth.personal.newAccount('!@superpassword')
-        .then(console.log);
-    // req_public = web3.personal.newAccount(password, function (error, result) {
-    //         if (!error) {
-    //             timeout(120000);
-    //             console.log("result" + result);
-    //             req_public = result;
-    //             console.log("req public " + req_public);
-    //             return result;
-    //         }
-    //     });
-    // console.log("req public after"+req_public);
-    //terporary, for test
-  //  req_public = "0x1wqe3nf4j34rfkwdwq3";
+  //  var password = "1234";
+    console.log("req_password" + password);
+    var req_public = await web3.eth.personal.newAccount(password);
+    console.log("req public after" + req_public);
+
     var req_balance = 0;
-    // var req_public = acc.address;
-    // if(req_userId == "" || req_public == "") {
-    //     res.status(400).send({message: "Filelds can not be empty"});
-    // }
-    //
-    // var wallet = new Wallet({userId: req_userId, public: req_public, balance: req_balance});
-    //
-    // wallet.save(function(err, data) {
-    // //    console.log(data);
-    //     if(err) {
-    //         console.log(err);
-    //         res.status(500).send({message: "Some error ocuured while creating the wallet."});
-    //     } else {
-    //       //  res.send(data);
-    //        // res.redirect('/wallets')
-    //      //   res.json({message: "Wallet successfully added!", data });
-    //         res.locals.wallet = wallet;
-    //         res.render('../views/wallets.ejs')
-    //     }
-    // });
+    if(req_userId == "" || req_public == "") {
+        res.status(400).send({message: "Filelds can not be empty"});
+    }
+
+    var wallet = new Wallet({userId: req_userId, public: req_public, balance: req_balance});
+
+    wallet.save(function(err, data) {
+    //    console.log(data);
+        if(err) {
+            console.log(err);
+            res.status(500).send({message: "Some error ocuured while creating the wallet."});
+        } else {
+          //  res.send(data);
+           // res.redirect('/wallets')
+         //   res.json({message: "Wallet successfully added!", data });
+            res.locals.wallet = wallet;
+            res.render('../views/wallets.ejs')
+        }
+    });
 };
 
 exports.findAll = function(req, res) {
