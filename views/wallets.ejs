@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ./parts/head %>
+</head>
+<header>
+    <% include ./parts/header %>
+</header>
+<body class="container">
+<br>
+<h3>Congratulations!</h3>
+
+<form method="POST" action="/generate">
+    <fieldset>
+        <legend>Your wallet has been created. The address is</legend>
+        <legend><%=wallet.public %></legend>
+
+    </fieldset>
+</form>
+</body>
+</html>
