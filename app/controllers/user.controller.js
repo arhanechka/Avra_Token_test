@@ -22,7 +22,6 @@ var encryptPassword = function (password, salt) {
 
 
 var checkPassword = function (password, salt, hashedPassword) {
-    console.log("in checkPassword");
     return encryptPassword(password, salt) === hashedPassword;
 };
 exports.login = function (req, res) {
@@ -34,9 +33,10 @@ exports.login = function (req, res) {
             } else {
                 console.log(user.salt);
                 if (checkPassword(req.body.logpassword, user.salt, user.pass)) {
-                    req.session.userId = user.id;
-                    req.session.userName = user.name;
-                    res.locals.user = user;
+                    req.session.user = res.locals.user = user;
+                    console.log(user._id);
+                   // req.session.userName = user.name;
+                   // res.locals.user = user;
                     res.render('../views/cabinet.ejs');
                 }
                 else {

@@ -39,7 +39,7 @@ app.set('view engine', 'ejs')
 
 require('./app/routes/user.routes.js')(app);
 require('./app/routes/wallet.routes.js')(app);
-require('./app/routes/contracts.js')(app);
+//require('./app/routes/contracts.js')(app);
 
 
 // Configuring the database
