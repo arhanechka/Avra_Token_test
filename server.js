@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+require('app-module-path').addPath(__dirname);
 // create express app
 var app = express();
 var config = require('./config/config.js').get(process.env.NODE_ENV);

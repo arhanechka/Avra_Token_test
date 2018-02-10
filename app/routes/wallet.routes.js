@@ -1,6 +1,6 @@
 module.exports = function(app) {
 
-    var wallet = require('../controllers/wallet.controller.js');
+    var wallet = require('app/controllers/wallet.controller.js');
 
      // Create a new Wallet
      app.post('/wallet', wallet.create);

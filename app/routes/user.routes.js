@@ -1,6 +1,6 @@
 module.exports = function(app) {
 
-    var users = require('../controllers/user.controller.js');
+    var users = require('app/controllers/user.controller.js');
     app.get('/login', users.loginPage);
 
     app.post('/login', users.login);

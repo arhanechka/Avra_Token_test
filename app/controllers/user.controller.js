@@ -1,8 +1,16 @@
-var User = require('../models/user.model.js');
+var User = require('app/models/user.model.js');
 var mongoose = require('mongoose');
 var crypto = require('crypto');
+var wallets = require('app/controllers/wallet.controller');
+var user;
+var errorH = require('config/errors');
 
 exports.loginPage = function (req, res) {
+   console.log(req.session.user)
+   if (req.session.user!=undefined){
+       res.render('../views/cabinet')
+   }
+   else
     res.render('../views/login', {
         topicHead: " Login"
     });
@@ -25,7 +33,6 @@ var checkPassword = function (password, salt, hashedPassword) {
     return encryptPassword(password, salt) === hashedPassword;
 };
 exports.login = function (req, res) {
-
     if (req.body.logemail && req.body.logpassword) {
         User.findOne({'email': req.body.logemail}, function (error, user) {
             if (error || !user) {
@@ -33,32 +40,47 @@ exports.login = function (req, res) {
             } else {
                 console.log(user.salt);
                 if (checkPassword(req.body.logpassword, user.salt, user.pass)) {
-                    req.session.user = res.locals.user = user;
+                    req.session.user = res.locals.user = global.user = user;
                     console.log(user._id);
+                    wallets.findByUserId(function (error, wallet){
+                        if (error || !user) {
+                            res.status(401).send({message: 'There is no any wallet.'});
+                        } else {
+                         var wallets = wallet;
+                         console.log("This is wallet" +wallets);
+                         res.global.wallets = wallets;
+                         console.log("This is local" +res.global.wallets);
+                    }}, user._id);
                    // req.session.userName = user.name;
                    // res.locals.user = user;
                     res.render('../views/cabinet.ejs');
                 }
                 else {
                     res.status(401).send({message: 'Wrong password.'});
+                   // throw new errorH.PhraseError("Wrong password");
                 }
             }
-        });
+        } );
     }
-
     else {
-        res.status(400).send({message: 'All fields required.'});
+       // res.status(400).send({message: 'All fields required.'});
+        throw new errorH.HTTPError(404, "Fields can not be empty");
     }
 }
 ;
 
 exports.register = function (req, res) {
+    if (req.session.user!=undefined){
+        res.render('../views/cabinet')
+    }
+    else{
     res.render('../views/register', {
         topicHead: " register"
     });
-};
+}};
 
 exports.create = function (req, res) {
+
     // Create and Save a new User
     var req_name = req.body.name;
     console.log(req_name);
